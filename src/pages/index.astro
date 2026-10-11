@@ -1,11 +1,584 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cloudflare.com">
+
+    <!-- Permanent Cache-Busting Network Headers -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>TRL SUPER LEAGUE</title>
+
+    <!-- 1. Tell the phone browser exactly where your live app blueprint sits -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- 2. Force the mobile address bar and theme layers to adapt to your dark game profile -->
+    <meta name="theme-color" content="#0f1015" />
+
+    <style>
+		/* ==========================================================================
+			Add your stationary background here using :global()
+           ========================================================================== */
+		   :global(body) {
+				background-image: url('/assets/images/logos/trl-long.png');
+				background-attachment: fixed; 
+				background-position: center; 
+				background-repeat: no-repeat; 
+				background-size: contain; 
+		}
+
+		/* ==========================================================================
+           AUTOMATED TABLET & WIDESCREEN RESPONSIVE ENGINE
+           ========================================================================== */
+
+        /* Automatically expands text spreads when tablets are flipped horizontally */
+        @media screen and (min-width: 768px) and (orientation: landscape) {
+            body {
+                max-width: 960px; /* Expands reading column limits for a comfortable landscape view */
+                margin: 40px auto;
+                padding: 0 30px;
+            }
+
+            .rules-box {
+                padding: 32px;
+                margin: 24px 0;
+            }
+        }
+
+        /* Large Screen Optimizations (Large Tablets, Monitors, and Laptops) */
+        @media screen and (min-width: 1024px) {
+            body {
+                max-width: 1050px; /* Sweeps columns out nicely on large display panels */
+            }
+        }
+		
+		/* PWA Installation Overlay Banner Layout */
+		.pwa-install-banner {
+			position: fixed;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: calc(100% - 40px);
+			max-width: 500px;
+			background: var(--bg-card);
+			border: 1px solid var(--text-divider);
+			box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+			border-radius: 12px;
+			padding: 16px;
+			z-index: 9999;
+			display: none; /* Controlled dynamically via runtime scripts */
+			flex-direction: column;
+			gap: 12px;
+			transition: opacity 0.3s ease;
+		}
+
+		.pwa-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.pwa-title {
+			font-weight: 700;
+			color: var(--text-primary);
+			font-size: 1rem;
+		}
+
+		.pwa-close-btn {
+			background: none;
+			border: none;
+			color: var(--text-muted);
+			font-size: 1.2rem;
+			cursor: pointer;
+			padding: 0 4px;
+		}
+
+		.pwa-body {
+			font-size: 0.9rem;
+			color: var(--text-secondary);
+			line-height: 1.4;
+		}
+
+		.pwa-action-row {
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+			margin-top: 4px;
+		}
+
+		.pwa-btn {
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 0.85rem;
+			font-weight: 600;
+			cursor: pointer;
+			border: none;
+		}
+
+		.pwa-btn-primary {
+			background: var(--color-link);
+			color: #ffffff;
+		}
+
+		.pwa-btn-secondary {
+			background: var(--bg-main-box);
+			border: 1px solid var(--text-divider);
+			color: var(--text-secondary);
+		}
+
+		/* Landscape-Specific Media Rules Override */
+		@media (orientation: landscape) and (min-width: 768px) {
+			body {
+				max-width: 1000px; /* Expands rulebook layout limits automatically when flipped horizontally */
+				margin: 20px auto;
+				padding: 30px;
+				display: grid;
+				grid-template-columns: 1fr; /* Ensures container blocks adapt smoothly to the extra real estate */
+			}
+
+			.rules-box {
+				padding: 32px; /* Amplifies grid spacing layouts comfortably for widescreen reading */
+			}
+		}
+		
+        /* 1. DEFINE YOUR REACTIVE COLOR MAP ARCHITECTURE */
+        :root {
+            --bg-main: #0f1015;
+            --bg-card: #171922;
+            --bg-contents: #1c1e27;
+            --bg-link: #242732;
+            --bg-link-hover: #3b82f6;
+            --text-primary: #ffffff;
+            --text-secondary: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-divider: #2d3139;
+            --shadow-card: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 2. AUTOMATIC LIGHT MODE OVERRIDE DATA VALUES */
+        :root[data-theme="light"] {
+            --bg-main: #f4f5f7;
+            --bg-card: #ffffff;
+            --bg-contents: #f9fafb;
+            --bg-link: #f3f4f6;
+            --bg-link-hover: #e5e7eb;
+            --text-primary: #111216;
+            --text-secondary: #1f2937;
+            --text-muted: #4b5563;
+            --text-divider: #d1d5db;
+            --shadow-card: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        h1 {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+        }
+        
+        /* 1. BUTTON HOVER CONTAINER FLEXBOX LAYOUT (Add this above your button code) */
+        .theme-toggle-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* 2. THE CORE BUTTON DESIGN (Keep your custom pill configurations) */
+        .theme-btn {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--text-divider);
+            padding: 10px 16px;
+            border-radius: 50px; /* Keeps your premium pill design */
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px -1px var(--shadow-card);
+            display: inline-flex; /* Ensures text and emojis center perfectly together */
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, color 0.2s, transform 0.1s, border-color 0.2s;
+        }
+
+        /* Adds a subtle layout response highlight when hovering over buttons */
+        .theme-btn:hover {
+            border-color: var(--color-link);
+            background: var(--bg-main-box);
+        }
+
+        /* 3. ACTIVE CLICK SPRING ANIMATION (Keep this completely intact!) */
+        .theme-btn:active { 
+            transform: scale(0.97); /* Keeps your tactile push spring effect on click */
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .game-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px -5px var(--shadow-card), 0 8px 10px -6px var(--shadow-card);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px var(--shadow-card), 0 10px 10px -5px var(--shadow-card);
+        }
+        .game-header {
+            padding: 24px 20px;
+            position: relative;
+        }
+        .game-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(0,0,0,0.35));
+        }
+        .game-title {
+            position: relative;
+            z-index: 10;
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .box-contents {
+            padding: 20px;
+            background: var(--bg-contents);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 1px solid var(--text-divider);
+        }
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .rule-link {
+            display: flex;
+            align-items: center;
+            background: var(--bg-link);
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--text-divider);
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .rule-link:hover {
+            background: var(--bg-link-hover);
+            color: var(--text-primary);
+        }
+        .section-divider {
+            grid-column: 1 / -1;
+            margin-top: 60px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--text-divider);
+            padding-bottom: 15px;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .blueprint-card {
+            background: var(--bg-card);
+            opacity: 0.7;
+            border: 2px dashed var(--text-divider);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+        .blueprint-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .status-badge {
+            align-self: flex-start;
+            background: var(--bg-link);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 15px;
+        }
+        .image-container {
+            margin: 20px auto;
+            padding: 12px;
+            background: var(--bg-main-box);
+            border: 1px solid var(--text-divider);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 100%;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 450px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid var(--text-divider);
+        }
+        .image-caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Horizontal Layout Row Wrapper (Flex Grid Modifiers) */
+        .image-row-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+        .image-row-container .image-container {
+            flex: 1 1 calc(33.333% - 15px);
+            min-width: 220px;
+            margin: 0;
+        }
+    </style>
+
+</head>
+<body>
+
+		<!-- THE REACTIVE THEME & ROTATION OPTION INTERFACE CONTROLLER BUTTONS -->
+    <div class="theme-toggle-container">
+        <button id="theme-toggle-btn" class="theme-btn">☀️ Light Mode</button>
+    </div>
+	
+		<div class="image-container">
+			<img
+				src="/assets/images/logos/trl-long.png" 
+				alt="TRL SUPER LEAGUE Long Logo"
+				loading="lazy"
+			/>
+		</div>
+
+		<h1>TRL SUPER LEAGUE</h1>
+    <p class="subtitle">Play for Fun. Play to Compete. Play Your Way.</p>
+        
+    <!-- Smart PWA Installation Banner Overlay Component -->
+    <div id="pwa-banner" class="pwa-install-banner">
+        <div class="pwa-header">
+            <div class="pwa-title">📱 Add TRL SUPER LEAGUE to Home Screen</div>
+            <button id="pwa-close" class="pwa-close-btn" aria-label="Close popup">×</button>
+        </div>
+        <div id="pwa-instructions" class="pwa-body">
+            <!-- Content will be auto-generated by the script layer based on device profiling -->
+        </div>
+        <div class="pwa-action-row">
+            <button id="pwa-dismiss" class="pwa-btn pwa-btn-secondary">Not Now</button>
+            <button id="pwa-action-btn" class="pwa-btn pwa-btn-primary" style="display: none;">Install App</button>
+        </div>
+    </div>
+
+    <!-- Unified TRL SUPER LEAGUE Platform Engine: Handles Service Workers, Auto-Theme Detection, and UI Controls -->
+    <script is:inline>
+        (function() {
+            // ==========================================
+            // 1. SERVICE WORKER REGISTER & RESET CONTROLS
+            // ==========================================
+            if ('serviceWorker' in navigator) {
+                // Register the background service worker architecture on initial load
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js');
+                });
+
+                // Force background service worker registrations to immediately pull fresh server updates from Vercel
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        registration.update(); 
+                    }
+                });
+            }
+
+            // ==========================================
+            // 2. AUTOMATED THEME EVALUATION OR OVERRIDE
+            // ==========================================
+            const savedTheme = localStorage.getItem('trl-super-league-theme');
+            const devicePrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            let activeTheme = 'dark'; // Base anchor default fallback
+
+            if (savedTheme) {
+                // Priority 1: Honor the explicit button selections saved in device memory
+                activeTheme = savedTheme;
+            } else {
+                // Priority 2: Auto-detect and adopt the system mode configuration of the Android/iOS device
+                activeTheme = devicePrefersDarkMode ? 'dark' : 'light';
+            }
+
+            // Mount evaluated selection instantly to prevent blinding screen flicker loops
+            document.documentElement.setAttribute('data-theme', activeTheme);
+
+            // ==========================================
+            // 3. UI BUTTON CLICK RUNTIME MANAGEMENT
+            // ==========================================
+            window.addEventListener('DOMContentLoaded', () => {
+                const themeBtn = document.getElementById('theme-toggle-btn');
+                if (!themeBtn) return; // Operational guard to stop compiler crashes if the button hasn't loaded yet
+
+                // Initialize the structural text on your shelf button to match active runtime metrics
+                updateButtonUI(activeTheme);
+
+                // Setup the mutation event tracker for deliberate player clicks
+                themeBtn.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    document.documentElement.setAttribute('data-theme', targetTheme);
+                    localStorage.setItem('trl-super-league-theme', targetTheme);
+                    updateButtonUI(targetTheme);
+                });
+
+                function updateButtonUI(theme) {
+                    themeBtn.innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+                }
+            });
+
+            // ==========================================
+            // 4. AUTOMATED PWA INSTALLATION INTERCEPTOR
+            // ==========================================
+            window.addEventListener('DOMContentLoaded', () => {
+                const banner = document.getElementById('pwa-banner');
+                const bodyText = document.getElementById('pwa-instructions');
+                const closeCross = document.getElementById('pwa-close');
+                const dismissBtn = document.getElementById('pwa-dismiss');
+                const actionBtn = document.getElementById('pwa-action-btn');
+
+                if (!banner) return; // Structural guard to prevent console errors
+
+                // Verify if the user has already explicitly closed this banner in the past
+                if (localStorage.getItem('pwa-banner-dismissed') === 'true') return;
+
+                // Device Profiling Flags
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+                // Stop execution entirely if the player is already using the installed home screen app version
+                if (isStandalone) return;
+
+                let deferredPrompt = null;
+
+                if (isIOS) {
+                    // Scenario A: Apple iOS Platform Profiler (Safari Directions Injection)
+                    bodyText.innerHTML = "Access the Soloverse platform like a native mobile app! Tap the <strong>Share</strong> button in Safari (square with an up arrow) and select <strong>Add to Home Screen</strong>.";
+                    banner.style.display = 'flex';
+                } else {
+                    // Scenario B: Android / Google Chrome Engine Listener
+                    window.addEventListener('beforeinstallprompt', (e) => {
+                        // Intercept Chrome's default browser overlay popup strip
+                        e.preventDefault();
+                        deferredPrompt = e;
+
+                        bodyText.innerHTML = "Install the TRL SUPER LEAGUEonto your device grid for lightning-fast book rendering and full offline table support.";
+                        actionBtn.style.display = 'block';
+                        banner.style.display = 'flex';
+                    });
+                }
+
+                // Interactive Event Triggers for Dismissing or Running Installs
+                const hideBanner = () => {
+                    banner.style.opacity = '0';
+                    setTimeout(() => { banner.style.display = 'none'; }, 300);
+                };
+
+                closeCross.addEventListener('click', hideBanner);
+                dismissBtn.addEventListener('click', () => {
+                    localStorage.setItem('pwa-banner-dismissed', 'true'); // Remembers dismissal setting forever
+                    hideBanner();
+                });
+
+                actionBtn.addEventListener('click', async () => {
+                    if (!deferredPrompt) return;
+                    hideBanner();
+                    deferredPrompt.prompt(); // Fires native Google Chrome install pipeline dialog layer
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        localStorage.setItem('pwa-banner-dismissed', 'true');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+
+            // ==========================================
+            // 5. MANUAL CANVAS ROTATION OVERRIDE CONTROLS
+            // ==========================================
+            window.addEventListener('DOMContentLoaded', () => {
+                const rotateBtn = document.getElementById('rotate-view-btn');
+                if (!rotateBtn) return; // Operational guard to stop console errors if button is absent
+
+                let currentRotateState = localStorage.getItem('trl-super-league-rotate-lock') || 'portrait';
+                document.documentElement.setAttribute('data-rotate-override', currentRotateState);
+
+                rotateBtn.addEventListener('click', () => {
+                    const activeState = document.documentElement.getAttribute('data-rotate-override');
+                    const targetState = activeState === 'landscape' ? 'portrait' : 'landscape';
+                    
+                    document.documentElement.setAttribute('data-rotate-override', targetState);
+                    localStorage.setItem('trl-super-league-rotate-lock', targetState);
+                });
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
